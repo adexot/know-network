@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        #mobile {
+            width: 100%;
+            display: inline-block;
+            height: 50px;
+            border-radius: 5px;
+            border: 1px solid #e8e8e8;
+            padding: 0 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <input type="text" name="mobile" id="mobile">
+        <div>Network Provider: <span id="telco"></span></div>
+    </div>
+    <script>
+        const log = console.log;
+        const telcos = {
+            1: 'mtn',
+            2: 'airtel',
+            3: 'glo',
+            4: 'etisalat'
+        }
+
+        const telcoNumber = {
+            mtn: ['0803', '0806', '0810', '0703', '0706'],
+            airtel: ['0802', '0808', '0801'],
+            glo: ['0805', '0807'],
+            etisalat: ['0809', '0818']
+        }
+
+        function generateTelcoPrefix(telcoNumber) {
+            const newArr = {};
+            Object.keys(telcoNumber).map((value, index) => {
+                telcoNumber[value].forEach(element => {
+                    newArr[element] = index + 1;
+                });
+            })
+
+            return newArr;
+        }
+
+        const telcoPrefix = generateTelcoPrefix(telcoNumber);
+
+        function getTelco(number) {
+            number = number.slice(0, 4);
+            return telcoPrefix[number];
+        }
+
+        function getElement(query) {
+            return document.querySelector(query);
+        }
+
+        function printTelco(id) {
+            const telco = telcos[id];
+
+            getElement('#telco').textContent = telco;
+        }
+
+        function run() {
+            const mobileInput = getElement('#mobile');
+            mobileInput.addEventListener('blur', (e) => {
+                e.preventDefault();
+                const inputValue = mobileInput.value.trim();
+
+                if (inputValue && inputValue.length >= 3) {
+                    let ans;
+                    if (inputValue.charAt(0) == '0') ans = getTelco(inputValue);
+                    if (ans) printTelco(ans);
+                } else {
+                    const errorMessage = 'please, provide the right value';
+                }
+
+            });
+        }
+
+        window.onload = run;
+    </script>
+</body>
+
+</html>
